@@ -147,9 +147,9 @@ class AnimalImageGenerator(Sequence):
                 images.append(img)
 
                 # One-hot Encoding
-                # oh = np.zeros(self.num_classes, dtype="float32")
-                # oh[l_index] = 1.0
-                # labels.append(oh)
-                labels.append(l_index)
+                oh = np.zeros(self.num_classes, dtype="float32")
+                oh[l_index] = 1.0
+                labels.append(oh)
+                # labels.append(l_index)
 
         return np.array(images), np.array(labels)
