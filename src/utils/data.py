@@ -118,13 +118,13 @@ class AnimalImageGenerator(Sequence):
         images, labels = [], []
 
         for _, row in batch_df.iterrows():
-            label = row.label
-            index = self.class_mapping[label] # TODO: Dont know for sure if this will work
+            l = row.label
+            l_index = self.class_mapping[l] # TODO: Dont know for sure if this will work
             repeats = 1
 
             # minority-boost augementation
             if self.augment and self.aug_strength is not None:
-                repeats = int(self.aug_strength[label])
+                repeats = int(self.aug_strength[l])
 
             for _ in range(repeats):
 
@@ -147,8 +147,9 @@ class AnimalImageGenerator(Sequence):
                 images.append(img)
 
                 # One-hot Encoding
-                oh = np.zeros(self.num_classes, dtype="float32")
-                oh[index] = 1.0
-                labels.append(oh)
+                # oh = np.zeros(self.num_classes, dtype="float32")
+                # oh[l_index] = 1.0
+                # labels.append(oh)
+                labels.append(l_index)
 
         return np.array(images), np.array(labels)
