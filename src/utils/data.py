@@ -3,6 +3,11 @@ import tensorflow as tf
 import numpy as np
 
 from tensorflow.keras.utils import Sequence
+from torch.utils.data import Dataset
+from torchvision import transforms
+from tqdm import tqdm
+
+
 #### ---------------------------------------------
 #### Funkcie tykajuce sa uprave dat
 #### ---------------------------------------------
@@ -147,9 +152,56 @@ class AnimalImageGenerator(Sequence):
                 images.append(img)
 
                 # One-hot Encoding
-                oh = np.zeros(self.num_classes, dtype="float32")
-                oh[l_index] = 1.0
-                labels.append(oh)
-                # labels.append(l_index)
+                # oh = np.zeros(self.num_classes, dtype="float32")
+                # oh[l_index] = 1.0
+                # labels.append(oh)
+                labels.append(l_index)
 
         return np.array(images), np.array(labels)
+
+
+class AnimalDataset(Dataset):
+    def __init__(self, df, class_mapping, target_size=(256, 256), augment=False):
+        self.filepaths = df["filepath"].values
+        self.labels = df["label"].map(class_mapping).values
+        self.target_size = target_size
+        self.augment = augment
+
+        # image transforms
+        if augment:
+            self.transform = transforms.Compose([
+                transforms.ToPILImage(),
+                transforms.RandomResizedCrop(target_size),
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomRotation(10),
+                transforms.ToTensor(),
+                transforms.Normalize(
+                    mean=[0.485, 0.456, 0.406],
+                    std=[0.229, 0.224, 0.225]
+                ),
+            ])
+        else:
+            self.transform = transforms.Compose([
+                transforms.ToPILImage(),
+                transforms.Resize(target_size),
+                transforms.ToTensor(),
+                transforms.Normalize(
+                    mean=[0.485, 0.456, 0.406],
+                    std=[0.229, 0.224, 0.225]
+                ),
+            ])
+
+    def __len__(self):
+        return len(self.filepaths)
+
+    def __getitem__(self, idx):
+        path = self.filepaths[idx]
+
+        # read image
+        img = cv2.imread(path)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+        img = self.transform(img)
+
+        label = int(self.labels[idx])
+        return img, label
