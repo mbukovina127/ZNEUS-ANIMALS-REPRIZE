@@ -83,7 +83,7 @@ def is_outlier(img):
     )
 
 class AnimalImageGenerator(Sequence):
-    def __init__(self, df, batch_size, target_size, num_classes,
+    def __init__(self, df, batch_size, target_size, num_classes, class_mapping,
                  shuffle=True, augment=False, aug_strength=None, max_size=500):
         super(AnimalImageGenerator, self).__init__()
 
@@ -97,6 +97,7 @@ class AnimalImageGenerator(Sequence):
         self.aug_strength = aug_strength
         self.indices = np.arange(len(self.df))
         self.on_epoch_end()
+        self.class_mapping = class_mapping
 
         print("---")
         print(f"Total images: {len(self.df)}")
@@ -118,6 +119,7 @@ class AnimalImageGenerator(Sequence):
 
         for _, row in batch_df.iterrows():
             label = row.label
+            index = self.class_mapping[label] # TODO: Dont know for sure if this will work
             repeats = 1
 
             # minority-boost augementation
@@ -146,7 +148,7 @@ class AnimalImageGenerator(Sequence):
 
                 # One-hot Encoding
                 oh = np.zeros(self.num_classes, dtype="float32")
-                oh[label] = 1.0
+                oh[index] = 1.0
                 labels.append(oh)
 
         return np.array(images), np.array(labels)
