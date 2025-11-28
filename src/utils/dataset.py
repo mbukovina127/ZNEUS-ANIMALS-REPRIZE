@@ -32,7 +32,8 @@ def get_bit_depth(img):
 
 
 def load_dataset_info(dataset_path):
-    VALID_EXTS = {".jpg", ".jpeg", ".png"}
+    # VALID_EXTS = {".jpg", ".jpeg", ".png"}
+    VALID_EXTS = {".jpeg"}
 
     filepaths = [p for p in Path(dataset_path).rglob("*") if p.suffix.lower() in VALID_EXTS]
 

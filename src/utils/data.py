@@ -1,6 +1,7 @@
 import cv2
 import tensorflow as tf
 import numpy as np
+import torch
 
 from tensorflow.keras.utils import Sequence
 from torch.utils.data import Dataset
@@ -205,3 +206,21 @@ class AnimalDataset(Dataset):
 
         label = int(self.labels[idx])
         return img, label
+
+class SingleImageInput():
+    def __init__(self, target_size=(256, 256)):
+        self.target_size = target_size
+        self.transform = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Resize(target_size),
+            transforms.ToTensor(),
+            transforms.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225]
+            ),
+        ])
+    def read_image(self, path) -> torch.Tensor:
+        img = cv2.imread(path)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = self.transform(img)
+        return img
