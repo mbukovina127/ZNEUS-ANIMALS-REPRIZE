@@ -3,10 +3,8 @@ import tensorflow as tf
 import numpy as np
 import torch
 
-from tensorflow.keras.utils import Sequence
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, WeightedRandomSampler
 from torchvision import transforms
-from tqdm import tqdm
 
 
 #### ---------------------------------------------
@@ -87,79 +85,19 @@ def is_outlier(img):
         area < 50000 or
         area > 2_000_000
     )
+def create_sampler(df, class_mapping):
+    #weigths for underrepresented classes
+    labels = df["label"].map(class_mapping).values
+    class_counts = np.bincount(labels)
+    class_weights = 1.0 / class_counts
 
-class AnimalImageGenerator(Sequence):
-    def __init__(self, df, batch_size, target_size, num_classes, class_mapping,
-                 shuffle=True, augment=False, aug_strength=None, max_size=500):
-        super(AnimalImageGenerator, self).__init__()
-
-        self.df = df.reset_index(drop=True)
-        self.batch_size = batch_size
-        self.target_size = target_size
-        self.max_size = max_size
-        self.shuffle = shuffle
-        self.augment = augment
-        self.num_classes = num_classes
-        self.aug_strength = aug_strength
-        self.indices = np.arange(len(self.df))
-        self.on_epoch_end()
-        self.class_mapping = class_mapping
-
-        print("---")
-        print(f"Total images: {len(self.df)}")
-        print(f"Num classes: {self.num_classes}")
-        print("---")
-
-    def __len__(self):
-        return len(self.df) // self.batch_size
-
-    def on_epoch_end(self):
-        if self.shuffle:
-            np.random.shuffle(self.indices)
-
-    def __getitem__(self, idx):
-        batch_idx = self.indices[idx*self.batch_size:(idx+1)*self.batch_size]
-        batch_df = self.df.iloc[batch_idx]
-
-        images, labels = [], []
-
-        for _, row in batch_df.iterrows():
-            l = row.label
-            l_index = self.class_mapping[l] # TODO: Dont know for sure if this will work
-            repeats = 1
-
-            # minority-boost augementation
-            if self.augment and self.aug_strength is not None:
-                repeats = int(self.aug_strength[l])
-
-            for _ in range(repeats):
-
-                # Image loading
-                img = cv2.imread(row.filepath)
-                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-                # Outlier detection and processing
-                if is_outlier(img):
-                    img = center_pad_or_crop(img, self.target_size[0], self.max_size)
-                else:
-                    img = cv2.resize(img, self.target_size)
-
-                # Augmentation
-                if self.augment:
-                    img = augment(img, self.target_size)
-
-                # ImageNet Scaling
-                img = tf.keras.applications.efficientnet.preprocess_input(img)
-                images.append(img)
-
-                # One-hot Encoding
-                # oh = np.zeros(self.num_classes, dtype="float32")
-                # oh[l_index] = 1.0
-                # labels.append(oh)
-                labels.append(l_index)
-
-        return np.array(images), np.array(labels)
-
+    sample_weights = class_weights[labels]
+    sampler = WeightedRandomSampler(
+        torch.from_numpy(sample_weights).float(),
+        num_samples=len(sample_weights),
+        replacement=True
+    )
+    return sampler
 
 class AnimalDataset(Dataset):
     def __init__(self, df, class_mapping, target_size=(256, 256), augment=False):
