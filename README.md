@@ -196,20 +196,24 @@ class ImageClassifier(nn.Module):
 >Naším prvotným riešením bolo použiť dropout na zmenšenie závislosti modelu na jednotlivé neuróny.
 >Toto riešenie mierne zvýšilo presnosť modelu no po overení s heatmap-ou vygenerovanou pomocou grad-camu sme zistili že model sa priveľmi spolieha na charakteristicke črty zvierat ako srsť, textúra, srste na rôzne sfarbenia srste.
 >
+> ![img.png](findings/100e_ovca_podla_konskeho_kopyta.png)
+> ![img_1.png](img/mucca_specific.png)
 >![img.png](img/droup-out_training.png)
 
 >Vďaka tomuto sme zistili že najlepším riešením je pridať ďalšie konvolučné vrstvy.
 >To nám opäť zvýšili presnosť modelu na hodnoty okolo 75% ale čo bolo dôležitejšie je že model už nenarazil na horný limit tak ako pri predošlých verziách.
->
+> ![](findings/100e_goodSpider.png)
+> 
 >![img.png](img/more_conv_training.png)
 
 >Po overením s heatmap-ou sme zistili že sa model už nerozhoduje podľa hyperšpecifických charakteristík no stále sa nezameriava na celé zviera.
 >Naším finálnym riešením bolo pridanie viacero konovlučnych sieti do jedneho bloku aby sme nestrácali detaily priskoro a taktiež použitie viacero rôznych kerneloch na dosiahnutie toho aby sa model dokázal naučiť rozsiahleši kontext z obrázkov. 
->Po dlhšom trenovaní sme dosiahli vysledky v blízkosti 90%(91% trenovacia presnosť, 89% validačna presnosť a 87% testovacia) 
-> 
+>Po dlhšom trenovaní sme dosiahli vysledky v blízkosti 90%(91% trenovacia presnosť, 89% validačna presnosť a 87% testovacia)
 >![img.png](img/best_training.png)
 >![img.png](img/best_val.png)
-
+>![](findings/choose.png)
+>![](findings/Cats.png)
+> ![img_2.png](img/veverky.png)
 ### 9.1 Zistenia z GRAD-CAM
 ![](findings/squirel%20based%20on%20tree.png)
 ![](findings/100e_badsquirel.png)
