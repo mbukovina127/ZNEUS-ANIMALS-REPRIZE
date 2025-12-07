@@ -224,13 +224,15 @@ Nasledne zobrazíme ako ovplivnňuje zvolený block GRAD-CAMu výstup heatmapy
 
 ## 10. Results and evaluation metrics 
 ### 10.1 Confusion matrix
-![confusion matrix](img/conf_mat.png)
-> Pomocou confusion matrix sme si overili naše tušenie, že klasifikacia podobne vyzerajúcich druhov je najmenej presná.  
-
-Finálne skóre testovacieho behu bolo: \
+![results.png](img/results.png)
+>Finálne skóre testovacieho behu bolo: \
 Test_loss: 0.4214895398630572 \
 Test_Acc: 0.8761354252683733 \
 Test_F1: 0.8633964159391541
+
+![confusion matrix](img/conf_mat.png)
+> Pomocou confusion matrix sme si overili naše tušenie, že klasifikacia podobne vyzerajúcich druhov je najmenej presná.  
+
 
 ---
 
@@ -245,7 +247,7 @@ Model sa naučil klasifikovať obrázky zvierat s vysokou presnosťou (**87.6% n
   - Počas analýzy pomocou **Grad-CAM** sa však ukázalo, že model sa v niektorých prípadoch sa vytvorili neuróny, ktoré sa zameriavajú skôr na **textúry a pozadie** namiesto dominantného objektu. 
   - Tento problém by bolo možné riešiť odstránením alebo neutralizovaním pozadia, čo je však náročnejší krok.
   - Pri obrázkoch s čiernym alebo bielym pozadím model fungoval najlepšie
-#### 3. Missclassifications
+#### 3. Misclassifications
 -   Zaujímave zistenie je že chyby nie sú komutatívne, teda šanca že model chybne označí mačku ako psa je 5-krát väčšia ako v opačnom prípade. 
 -   Časté zámeny psa za koňa, kravu alebo mačku (nie naopak)
   - Podobne si model mýlil kopytníky (kôň, krava, ovca) medzi sebou, čo sú triedy s prirodzene blízkymi vizuálnymi znakmi.
