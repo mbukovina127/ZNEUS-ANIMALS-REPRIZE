@@ -75,3 +75,28 @@ V extrémnych hodnotách sa nachádzajú takmer úplne biele alebo čierne obrá
 - Mierna prítomnosť nesprávne zaradených vzoriek
 
 ---
+
+## 5. Data split
+- Kedže dataset obashoval veľa vzoriek, mohli sme si dovoliť rozdeliť dáta na:
+  - Tréningová množina: 90% 
+  - Testovacia množina: 10% (VAL/TEST)
+  - BATCH SIZE: 64
+- Model bude hodnotený iba na testovacej množine, ktorá nebude použitá počas tréningu ani validácie
+- Hodnotenie je na základe troch kľúčových metrík: **Test Loss, Accuracy a F1-score** (štandardné metriky pre klasifikačné úlohy)
+
+---
+
+## 6. Data preprocessing
+- Všetky obrázky boli zmenšené na **128x128px** pre konzistentný vstup do modelu (veľká majorita obrázkov mala rozmery okolo 300x250 px, takže zmenšenie nespôsobilo výraznú stratu features)
+- Aplikovali sme **škálovanie pixelov** v rozsahu [0, 1] pre zlepšenie konvergencie modelu počas prevodu na tenzor
+- Nomalizivali sme podla (mean,std) pre lepšiu komtaniblitu s ImageNet modelmi
+
+---
+
+## 7. Data augmentation
+- Použili sme **data augmentation** techniky:
+  - RandomResizedCrop(target_size) = náhodné vystrihnutie časti obrázka a jeho zmena na cieľovú veľkosť
+  - RandomHorizontalFlip() = náhodné horizontálne prevrátenie obrázka
+  - RandomRotation(10) = náhodné otočenie obrázka o ±10 stupňov
+- Použili sme aj **minority-augmentation boost** pre vyváženie datasetu (viac augmentácie pre menej zastúpené triedy)
+- Augemtovali sa iba tréningové dáta, validačné a testovacie dáta sme len zmenšovali
