@@ -32,7 +32,7 @@ Obsahovo je dataset kvalitný, avšak obsahuje malé množstvo nesprávne zarade
 - **Minimum:** 60 × 57 px  
 - **Maximum:** 6720 × 6000 px  
 
-Rozmery obrázkov nie sú normálne distribuované, množstvo vzoriek výrazne vybočuje z hlavného rozsahu.
+Rozmery obrázkov nie sú normálne distribuované.
 
 ### Outliery podľa rozmerov
 
@@ -48,14 +48,14 @@ Rozmery obrázkov nie sú normálne distribuované, množstvo vzoriek výrazne v
 
 ## 3. Farebný model a distribúcia pixelov
 
-Väčšina obrázkov je v modeli RGB s 8-bitovou hĺbkou, čo zodpovedá požiadavkám pre CNN.
+Väčšina obrázkov je v modeli **RGB s 8-bitovou** hĺbkou, čo zodpovedá požiadavkám pre CNN.
 
 Distribúcia pixelov je vo všeobecnosti vyvážená, avšak:
 
 - **Modrý kanál vykazuje vyššiu smerodajnú odchýlku**.  
   Je to spôsobené obrázkami obsahujúcimi časti oblohy.
 
-V extrémnych hodnotách sa nachádzajú takmer úplne biele alebo čierne obrázky (napr. transparentné PNG alebo obrázky s bielym/čiernym pozadím). Tieto vzorky nepredstavujú problém a môžu byť ponechané v datasete z dôvodu ľahkej extrakcii features.
+V extrémnych hodnotách sa nachádzajú úplne biele alebo čierne obrázky (napr. transparentné PNG alebo obrázky s bielym/čiernym pozadím). Tieto vzorky nepredstavujú problém a môžu byť ponechané v datasete z dôvodu ľahkej extrakcii features.
 
 ---
 
@@ -64,10 +64,10 @@ V extrémnych hodnotách sa nachádzajú takmer úplne biele alebo čierne obrá
 ### Pozitíva
 - Veľký počet vzoriek (26k) a vhodný počet tried (10)
 - Žiadne chybné alebo nečitateľné obrázky
-- Konzistentné farebné modely
-- Správne formáty obrázkov
+- Konzistentné farebné modely (RGB)
+- Správne formáty obrázkov (.jpeg)
 - Vysoká kvalita dát pre účely klasifikácie
-- Svetlosť obrázkov nie je problém (ponechávame v datasete)
+- Svetlosť obrázkov nie je problém (outliery ponechávame v datasete)
 
 ### Identifikované problémy
 - Výrazná **nevyváženosť tried**
@@ -77,7 +77,7 @@ V extrémnych hodnotách sa nachádzajú takmer úplne biele alebo čierne obrá
 ---
 
 ## 5. Data split
-- Kedže dataset obashoval veľa vzoriek, mohli sme si dovoliť rozdeliť dáta na:
+- Kedže dataset obashoval veľa vzoriek, mohli sme si dovoliť rozdeliť dáta v pomere:
   - Tréningová množina: 90% 
   - Testovacia množina: 10% (VAL/TEST)
   - BATCH SIZE: 64
@@ -95,9 +95,9 @@ V extrémnych hodnotách sa nachádzajú takmer úplne biele alebo čierne obrá
 
 ## 7. Data augmentation
 - Použili sme **data augmentation** techniky:
-  - RandomResizedCrop(target_size) = náhodné vystrihnutie časti obrázka a jeho zmena na cieľovú veľkosť
-  - RandomHorizontalFlip() = náhodné horizontálne prevrátenie obrázka
-  - RandomRotation(10) = náhodné otočenie obrázka o ±10 stupňov
+  - `RandomResizedCrop(target_size)` = náhodné vystrihnutie časti obrázka a jeho zmena na cieľovú veľkosť
+  - `RandomHorizontalFlip()` = náhodné horizontálne prevrátenie obrázka
+  - `RandomRotation(10)` = náhodné otočenie obrázka o ±10 stupňov
 - Použili sme aj **minority-augmentation boost** pre vyváženie datasetu (viac augmentácie pre menej zastúpené triedy)
 - Augemtovali sa iba tréningové dáta, validačné a testovacie dáta sme len zmenšovali
 
