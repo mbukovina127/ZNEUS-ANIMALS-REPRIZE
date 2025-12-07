@@ -103,7 +103,18 @@ V extrémnych hodnotách sa nachádzajú takmer úplne biele alebo čierne obrá
 
 --- 
 ## 8. Configuration
-Toto je podoba finalneho modelu 
+Set-up
+```python
+EPOCHS = 100
+LEARNING_RATE = 0.1
+
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(img_class_model.parameters(), lr=0.2, momentum=0.9)
+scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, "max", patience=4)
+e_stop = EarlyStopping(patience=5, diff=0.01)
+```   
+
+Toto je podoba finalneho modelu
 ```python 
 class ImageClassifier(nn.Module):
     def __init__(self, classes: int, dropout: nn.Dropout = nn.Dropout(0.3)):
@@ -175,6 +186,8 @@ class ImageClassifier(nn.Module):
         return self.fc2(x)
 ```
 
+---
+
 ## 9. Experimentácia
 >Prvé verzii modelu mali iba 3 až 4 konvolučné vrstvy ktoré dosahovali výsledky 60% presnosti.
 >
@@ -223,13 +236,13 @@ Nasledne zobrazíme ako ovplivnňuje zvolený block GRAD-CAMu výstup heatmapy
 ---
 
 ## 10. Results and evaluation metrics 
-### 10.1 Confusion matrix
 ![results.png](img/results.png)
 >Finálne skóre testovacieho behu bolo: \
 Test_loss: 0.4214895398630572 \
 Test_Acc: 0.8761354252683733 \
 Test_F1: 0.8633964159391541
 
+### 10.1 Confusion matrix
 ![confusion matrix](img/conf_mat.png)
 > Pomocou confusion matrix sme si overili naše tušenie, že klasifikacia podobne vyzerajúcich druhov je najmenej presná.  
 
