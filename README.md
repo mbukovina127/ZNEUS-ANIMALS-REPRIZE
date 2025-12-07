@@ -32,7 +32,7 @@ Obsahovo je dataset kvalitný, avšak obsahuje malé množstvo nesprávne zarade
 - **Minimum:** 60 × 57 px  
 - **Maximum:** 6720 × 6000 px  
 
-Rozmery obrázkov nie sú normálne distribuované; množstvo vzoriek výrazne vybočuje z hlavného rozsahu.
+Rozmery obrázkov nie sú normálne distribuované, množstvo vzoriek výrazne vybočuje z hlavného rozsahu.
 
 ### Outliery podľa rozmerov
 
@@ -48,7 +48,7 @@ Rozmery obrázkov nie sú normálne distribuované; množstvo vzoriek výrazne v
 
 ## 3. Farebný model a distribúcia pixelov
 
-Väčšina obrázkov je v modeli RGB s 8-bitovou hĺbkou, čo zodpovedá požiadavkám pre CNN architektúry.
+Väčšina obrázkov je v modeli RGB s 8-bitovou hĺbkou, čo zodpovedá požiadavkám pre CNN.
 
 Distribúcia pixelov je vo všeobecnosti vyvážená, avšak:
 
@@ -235,3 +235,17 @@ Test_F1: 0.8633964159391541
 ---
 
 ## 11. Summary 
+Model sa naučil klasifikovať obrázky zvierat s vysokou presnosťou (**87.6% na testovacej množine**).
+
+### Kľúčové zistenia:
+#### 1. Bias Modelu
+   - Všetky triedy boli klasifikované s úspešnosťou nad 80 %, takže model nevykazuje výrazný bias voči žiadnej kategórii, čo bola pôvodne jedna z obáv.
+   - Data augmentation a minority-boost bolo správne
+#### 2. Features Extraction
+  - Počas analýzy pomocou **Grad-CAM** sa však ukázalo, že model sa v niektorých prípadoch sa vytvorili neuróny, ktoré sa zameriavajú skôr na **textúry a pozadie** namiesto dominantného objektu. 
+  - Tento problém by bolo možné riešiť odstránením alebo neutralizovaním pozadia, čo je však náročnejší krok.
+  - Pri obrázkoch s čiernym alebo bielym pozadím model fungoval najlepšie
+#### 3. Missclassifications
+-   Zaujímave zistenie je že chyby nie sú komutatívne, teda šanca že model chybne označí mačku ako psa je 5-krát väčšia ako v opačnom prípade. 
+-   Časté zámeny psa za koňa, kravu alebo mačku (nie naopak)
+  - Podobne si model mýlil kopytníky (kôň, krava, ovca) medzi sebou, čo sú triedy s prirodzene blízkymi vizuálnymi znakmi.
