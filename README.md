@@ -202,13 +202,16 @@ class ImageClassifier(nn.Module):
 
 >Vďaka tomuto sme zistili že najlepším riešením je pridať ďalšie konvolučné vrstvy.
 >To nám opäť zvýšili presnosť modelu na hodnoty okolo 75% ale čo bolo dôležitejšie je že model už nenarazil na horný limit tak ako pri predošlých verziách.
+>
 > ![](findings/100e_goodSpider.png)
 > 
 >![img.png](img/more_conv_training.png)
 
+
 >Po overením s heatmap-ou sme zistili že sa model už nerozhoduje podľa hyperšpecifických charakteristík no stále sa nezameriava na celé zviera.
 >Naším finálnym riešením bolo pridanie viacero konovlučnych sieti do jedneho bloku aby sme nestrácali detaily priskoro a taktiež použitie viacero rôznych kerneloch na dosiahnutie toho aby sa model dokázal naučiť rozsiahleši kontext z obrázkov. 
 >Po dlhšom trenovaní sme dosiahli vysledky v blízkosti 90%(91% trenovacia presnosť, 89% validačna presnosť a 87% testovacia)
+>
 >![img.png](img/best_training.png)
 >![img.png](img/best_val.png)
 >![](findings/choose.png)
